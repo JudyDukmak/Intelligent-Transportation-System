@@ -1,8 +1,6 @@
 """
 Quick sanity check: step the CityFlow engine and watch vehicles / one lane.
 
-Run from repo `code/` in Docker:
-  python env/smoke_cityflow_steps.py
 """
 import cityflow
 
@@ -10,7 +8,7 @@ CONFIG_PATH = "config/config.json"
 TOTAL_STEPS = 500
 LOG_EVERY = 50
 # Any lane that appears on routes in flow.json, e.g. road_1_2_3 -> road_1_2_3_0
-SAMPLE_LANE = "road_1_2_3_0"
+SAMPLE_LANE = "road_1_2_3_1"                        #lane is 0, 1 in any road - - - 
 
 
 def main():

@@ -79,8 +79,9 @@ def main():
 
     print("\n=== Note: snapshot() ===")
     print("eng.snapshot() returns an Archive object (save/load), not lane JSON. Ignore for lane listing.")
-
-    print("\n=== Lane ids from get_lane_vehicle_count() (no args) ===")
+    eng.snapshot()
+    print("Snapshot taken.")
+    print("\n=== Lane ids from get_lane_vehicle_count()  ===")
     lane_ids = []
     total_steps = 0
     for target_steps in (0, 50, 250):
@@ -89,7 +90,7 @@ def main():
             total_steps += 1
         lane_counts = lane_ids_from_lane_dict_api(eng)
         n_veh = eng.get_vehicle_count() if hasattr(eng, "get_vehicle_count") else -1
-        print(f"After {total_steps} steps: vehicles={n_veh} lanes_in_dict={len(lane_counts)}")
+        print(f"After {total_steps} steps: vehicles={n_veh} Total_lanes_in_dict={len(lane_counts)}")
         if lane_counts:
             lane_ids = sorted(lane_counts.keys())
             print("Sample lane ids:", lane_ids[:20])
