@@ -5,9 +5,28 @@ Baseline implementation for single intersection traffic signal control using Han
 
 ## Structure
 - env/ → simulation environment
-- agents/ → control algorithms (SOTL, etc.)
-- training/ → simulation loop
 - evaluation/ → metrics
 
-## How to Run
+  
+Folder Structure:
+code/
+└── 
+    ├── agents/
+    │   └── ppo_agent.py
+    ├── environment/
+    │   └── cityflow_env.py
+    ├── preprocessing/
+    │   └── parser.py
+    ├── training/
+    │   └── train.py
+    ├── evaluation/
+    │   └── evaluate.py
+    ├── results/
+    │   └── baseline2/
+    ├── main.py
+    └── config/
+        └── config.json
+    └── data/
+        └── roadnet.json
+
 
