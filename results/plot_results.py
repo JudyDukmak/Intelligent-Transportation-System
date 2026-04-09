@@ -4,9 +4,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
-wait = np.load(ROOT / "results" / "wait.npy")
-queue = np.load(ROOT / "results" / "queue.npy")
-throughput = np.load(ROOT / "results" / "throughput.npy")
+wait = np.load(ROOT / "results" / "baseline2"/ "wait.npy")
+queue = np.load(ROOT / "results" / "baseline2" / "queue.npy")
+throughput = np.load(ROOT / "results" / "baseline2" / "throughput.npy")
 
 plt.figure()
 plt.plot(wait)
