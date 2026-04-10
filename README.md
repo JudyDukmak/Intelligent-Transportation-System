@@ -4,12 +4,12 @@
 Baseline implementation for single intersection traffic signal control using Hangzhou dataset.
 
 ## Overview
-This project implements reinforcement learning-based traffic signal control using the CityFlow simulator on a single intersection (Hangzhou dataset).
+This project implements adaptive traffic signal control using PPO reinforcement learning on the CityFlow simulator.
 
-We developed two baselines:
+Two baselines are developed:
 
-Baseline 1: Simple RL environment with basic state and reward
-Baseline 2 (Improved): PPO-based model with normalized state, pressure-based reward, and full training/evaluation pipeline
+Baseline 1: Basic PPO with raw state and max-pressure reward
+Baseline 2: Improved PPO with normalized state, constrained actions, and multi-objective reward
 
 The goal is to minimize congestion, waiting time, and travel time while maximizing throughput.
 
@@ -27,18 +27,17 @@ The goal is to minimize congestion, waiting time, and travel time while maximizi
 code/
 └── 
     ├── agents/
-    │   └── ppo_agent.py
+    │   └── ppo_agent.py  # PPO agent definition
     ├── environment/
-    │   └── cityflow_env.py
+    │   └── cityflow_env.py  # CityFlow Gym environment
     ├── preprocessing/
-    │   └── parser.py
+    │   └── parser.py  # roadnet parser
     ├── training/
-    │   └── train.py
+    │   └── train.py  # training loop
     ├── evaluation/
-    │   └── evaluate.py
-    ├── results/
-    │   └── baseline2/
-    ├── main.py
+    │   └── evaluate.py  # evaluation + metrics 
+    ├── results/   # saved models and outputs 
+    ├── main.py     # entry point
     └── config/
         └── config.json
     └── data/
@@ -48,50 +47,49 @@ code/
 
 ## Baseline 1 (Initial Implementation)
 🔹 State Representation
-Raw lane vehicle counts
-No normalization
+1. Current phase
+2. Phase duration
+3. Queue length per lane
+4. Waiting vehicles per lane
+5. Outgoing vehicles
 🔹 Action Space
-Discrete traffic light phases
+Discrete phase selection
 🔹 Reward Function
-Based on queue or waiting vehicles
+Max Pressure:
+reward = - Σ (queue_in - queue_out)
 
 🔹 Limitations
 No normalization → unstable training
 No phase constraints → unrealistic switching
 Weak reward → poor traffic optimization
-No evaluation metrics
+
+--------------------------------------------------------------
 
 ## Baseline 2 (Improved Version)
-🔹 State Representation (Enhanced)
-We redesigned the state to include:
-This is the main contribution of the project.
-state = [
-    normalized_current_phase,
-    normalized_phase_time,
-    for each incoming lane:
-        (queue_length, waiting_count, outgoing_flow)
-]
-Improvements:
-Normalized values → stable learning
-Includes traffic dynamics (incoming + outgoing)
-Encodes temporal info (phase time)
-🔹 Action Space (Same but Controlled)
-action ∈ {traffic light phases}
-Enhancement:
-Added minimum green time constraint (10 steps)
+🔹 State Representation 
+Normalized state:
+1. Phase / total phases
+2. Phase time / max time
+3. Queue / MAX_QUEUE
+4. Waiting / MAX_QUEUE
+5. Outgoing / MAX_QUEUE
+   
+🔹 Action Space 
+- Discrete phase selection
+- Minimum green time constraint (10 steps)
 
-🔹 Reward Function (Major Upgrade)
-We implemented a pressure-based reward:
-pressure = Σ(incoming vehicles - outgoing vehicles)
-reward = -pressure - 0.1 * queue_length - 0.05 * waiting_time
-Why:
-Encourages traffic flow balancing
-Penalizes congestion
-Inspired by state-of-the-art methods (PressLight)
+🔹 Reward Function 
+Multi-objective: adding penalty
+reward = -pressure - 0.1 * queue - 0.05 * waiting
+
+Improvements:
+- Stable training
+- Realistic traffic behavior
+- Better generalization
 
 🔹 Training Setup
 Algorithm: PPO (Proximal Policy Optimization)
-Steps: 200,000 timesteps
+Steps:30,000 timesteps(1st baseline), 200,000 timesteps (2nd baseline)
 Action interval: every 10 simulation steps
 Episode length: 3600 steps (1 hour simulation)
 
@@ -104,12 +102,14 @@ AWT	Average Waiting Time
 Throughput	Vehicles completed
 
 ## Results
-ATT = 102.82
-AQL = 50.8
-AWT = 19.47
-Throughput = 51
+Metric	  Baseline 1  	Baseline 2
+ATT	        425	         102
+AWT	         62          	19
+AQL	         93	          50
+Throughput  	8          	51
 
 ## How to Run
+Run inside Docker:
 Train:
 python main.py --mode train
 Evaluate:
