@@ -6,7 +6,7 @@ import numpy as np
 
 SEED = 42  # you can change it, but keep it fixed
 ROOT = Path(__file__).resolve().parents[1]
-RESULT_PATH = ROOT / "results" / "baseline2"
+RESULT_PATH = ROOT / "results" / "baseline3"
 RESULT_PATH.mkdir(parents=True, exist_ok=True)
 
 def train():
