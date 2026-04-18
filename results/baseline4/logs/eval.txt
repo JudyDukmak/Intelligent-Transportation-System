@@ -1,0 +1,7 @@
+
+=== METRICS ===
+AWT (Avg Wait Time): 14.740196078431373
+AQL (Avg Queue Length): 31.69934640522876
+ATT (Avg Travel Time): 92.72781385281385
+Total Throughput: 515
+Saved results to: /work/results/baseline4
